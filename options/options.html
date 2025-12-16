@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>UiToAi - Usage / 使用说明</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="title">UiToAi</div>
+      <div id="options-subtitle" class="subtitle">Usage Guide</div>
+    </header>
+
+    <main class="container">
+      <section id="section-en" class="card">
+        <h2>Quick Start</h2>
+        <ol>
+          <li>Open any webpage you want to replicate (e.g. a marketing site or web app).</li>
+          <li>Click the UiToAi extension icon to open the popup.</li>
+          <li>Click <b>Start Run</b> to begin a collection session.</li>
+          <li>Click <b>Capture Snapshot</b> to extract design tokens, layout rules, motion and a11y hints.</li>
+          <li>Optional: click <b>Pick Element</b> to enter element selection mode.</li>
+          <li>Click <b>Export for AI</b> to export files into a folder:
+            <code>UiToAi-export-{host}-{timestamp}/</code>
+            <ul>
+              <li><code>ai/spec.json</code> - source of truth data</li>
+              <li><code>ai/prompt.md</code> - prompt guidance for AI coding tools</li>
+              <li><code>samples/elements.json</code> - element samples (if any)</li>
+            </ul>
+          </li>
+          <li>Click <b>Stop Run</b> to finish the session.</li>
+        </ol>
+      </section>
+
+      <section id="section-zh" class="card">
+        <h2>快速开始</h2>
+        <ol>
+          <li>打开你要复刻的网页（营销页 / Web 应用 / 文档页等）。</li>
+          <li>点击 UiToAi 扩展图标打开弹窗。</li>
+          <li>点击 <b>Start Run</b> 开始本次采集。</li>
+          <li>点击 <b>Capture Snapshot</b> 提取设计 tokens、布局规则、动效与可访问性线索。</li>
+          <li>可选：点击 <b>Pick Element</b> 进入元素选择模式。</li>
+          <li>点击 <b>Export for AI</b> 导出到文件夹：
+            <code>UiToAi-export-{host}-{timestamp}/</code>
+            <ul>
+              <li><code>ai/spec.json</code>：规范数据（事实来源）</li>
+              <li><code>ai/prompt.md</code>：给 AI 工具的提示词模板</li>
+              <li><code>samples/elements.json</code>：元素样本（如果有）</li>
+            </ul>
+          </li>
+          <li>点击 <b>Stop Run</b> 结束采集。</li>
+        </ol>
+      </section>
+
+      <section class="card">
+        <h2 id="options-troubleshooting">Troubleshooting</h2>
+        <ul id="troubleshooting-en">
+          <li>
+            <b>Popup buttons disabled</b>:
+            Make sure the current tab is a normal web page (not <code>edge://</code>, <code>chrome://</code>, extension pages).
+          </li>
+          <li>
+            <b>Export blocked</b>:
+            Your browser may block multiple downloads. Allow downloads for this extension and retry.
+          </li>
+          <li>
+            <b>How to view logs</b>:
+            Go to <code>edge://extensions</code> / <code>chrome://extensions</code> → extension Details → Service worker → Inspect.
+          </li>
+        </ul>
+
+        <ul id="troubleshooting-zh">
+          <li>
+            <b>弹窗按钮不可用</b>：
+            请确认当前标签页是普通网页（不是 <code>edge://</code>、<code>chrome://</code>、扩展页等）。
+          </li>
+          <li>
+            <b>导出被拦截</b>：
+            浏览器可能会阻止批量下载。请允许此扩展下载多个文件后重试。
+          </li>
+          <li>
+            <b>如何查看日志</b>：
+            打开 <code>edge://extensions</code> / <code>chrome://extensions</code> → 详细信息 → Service worker → Inspect。
+          </li>
+        </ul>
+      </section>
+
+      <footer class="footer">
+        <div id="options-footer">UiToAi runs locally. No cloud sync.</div>
+      </footer>
+    </main>
+
+    <script src="options.js"></script>
+  </body>
+</html>

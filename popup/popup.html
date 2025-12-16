@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>UiToAi</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="title">UiToAi</div>
+      <div id="popup-subtitle" class="subtitle" data-i18n="popupSubtitle">Extract design rules for AI coding</div>
+    </header>
+
+    <!-- Project 区域 -->
+    <section class="section">
+      <div class="section-title" data-i18n="sectionProject">Project</div>
+      <div id="project-info" class="project-info" data-i18n="projectLoading">Loading...</div>
+    </section>
+
+    <!-- Run 控制区域 -->
+    <section class="section">
+      <div class="section-title" data-i18n="sectionRun">Run</div>
+      <div id="run-status" class="run-status" data-i18n="runNoActive">No active run</div>
+      <div class="btn-row">
+        <button id="btn-start" class="btn" data-i18n="btnStartRun">Start Run</button>
+        <button id="btn-stop" class="btn btn-secondary" disabled data-i18n="btnStopRun">Stop Run</button>
+      </div>
+      <div class="btn-row">
+        <button id="btn-snapshot" class="btn" disabled data-i18n="btnCaptureSnapshot">Capture Snapshot</button>
+        <button id="btn-pick" class="btn btn-secondary" disabled data-i18n="btnPickElement">Pick Element</button>
+      </div>
+    </section>
+
+    <!-- 导出区域 -->
+    <section class="section">
+      <div class="section-title" data-i18n="sectionExport">Export</div>
+      <div class="btn-row">
+        <button id="btn-export" class="btn" disabled data-i18n="btnExportForAI">Export for AI</button>
+      </div>
+      <div class="options">
+        <label>
+          <input type="checkbox" id="opt-sanitize" />
+          <span data-i18n="optSanitize">Sanitize (remove text content)</span>
+        </label>
+      </div>
+    </section>
+
+    <!-- 预览区域 -->
+    <section class="section">
+      <div class="section-title" data-i18n="sectionPreview">Preview</div>
+      <pre id="preview" class="preview" data-i18n="previewSelectRun">Select a run to see spec preview</pre>
+    </section>
+
+    <!-- 状态消息 -->
+    <div id="status" class="status"></div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

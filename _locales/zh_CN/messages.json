@@ -1,0 +1,81 @@
+{
+  "extName": {"message": "UiToAi"},
+  "extDescription": {"message": "提取网站 UI/设计规则用于 AI 生成（本地运行，不上传云端）。"},
+  "actionTitle": {"message": "UiToAi"},
+
+  "popupSubtitle": {"message": "提取设计规则用于 AI"},
+  "sectionProject": {"message": "项目"},
+  "sectionRun": {"message": "运行"},
+  "sectionExport": {"message": "导出"},
+  "sectionPreview": {"message": "预览"},
+
+  "projectLoading": {"message": "加载中..."},
+  "projectNoProject": {"message": "无项目（请先打开一个网页）"},
+
+  "runNoActive": {"message": "暂无进行中的运行"},
+  "runActiveStarted": {"message": "进行中：开始于 $1"},
+  "runCompleted": {"message": "已完成：$1 - $2"},
+
+  "btnStartRun": {"message": "开始运行"},
+  "btnStopRun": {"message": "停止运行"},
+  "btnCaptureSnapshot": {"message": "采集快照"},
+  "btnPickElement": {"message": "选择元素"},
+  "btnExportForAI": {"message": "导出给 AI"},
+
+  "optSanitize": {"message": "脱敏（移除文本内容）"},
+
+  "previewSelectRun": {"message": "选择一个运行以查看预览"},
+
+  "previewEmpty": {"message": "暂无规范数据。点击“采集快照”进行提取。"},
+
+  "statusRunStarted": {"message": "已开始运行"},
+  "statusRunStopped": {"message": "已停止运行"},
+  "statusCapturing": {"message": "采集中..."},
+  "statusSnapshotCaptured": {"message": "已采集快照"},
+  "statusPickModeActivated": {"message": "已进入选择模式"},
+  "statusExporting": {"message": "正在导出文件..."},
+  "statusExported": {"message": "已导出 $1 个文件到 $2"},
+
+  "errNoRunToExport": {"message": "无可导出的运行"},
+
+  "errCreateProjectFailed": {"message": "创建项目失败"},
+  "errStartRunFailed": {"message": "开始运行失败"},
+  "errStopRunFailed": {"message": "停止运行失败"},
+  "errCaptureFailed": {"message": "采集失败"},
+  "errSaveSpecFailed": {"message": "保存规范数据失败"},
+  "errExportFailed": {"message": "导出失败"},
+
+  "errNoProject": {"message": "无项目"},
+  "errNoActiveRun": {"message": "无进行中的运行"},
+  "errCannotAccessTab": {"message": "无法访问当前标签页"},
+  "errInvalidUrl": {"message": "URL 无效"},
+  "errContentScriptMissing": {"message": "该页面无法注入脚本（Content Script 不可用）。"},
+
+  "hudTitle": {"message": "UiToAi"},
+  "hudPick": {"message": "选择元素"},
+  "hudPage": {"message": "选择页面"},
+  "hudExit": {"message": "退出"},
+  "toastSaved": {"message": "已保存到 UiToAi 弹窗"},
+
+  "optionsFooter": {"message": "UiToAi 本地运行，不上传云端。"},
+
+  "promptGenerated": {"message": "> 由 UiToAi 生成于 $1"},
+  "promptTitle": {"message": "# 设计系统提取：$1"},
+  "promptInstructionsTitle": {"message": "## 给 AI 的指引"},
+  "promptInstructionsLine": {"message": "请基于 spec 复刻设计系统，按以下顺序执行："},
+  "promptStep1": {"message": "1. **设计 Tokens** - 基于 `spec.designTokens` 搭建颜色/字体/间距/阴影等 tokens"},
+  "promptStep2": {"message": "2. **布局** - 基于 `spec.layoutRules` 配置断点与容器宽度"},
+  "promptStep3": {"message": "3. **动效** - 基于 `spec.motionSpec` 复刻 transition/animation 的时长与 easing"},
+  "promptStep4": {"message": "4. **可访问性** - 基于 `spec.a11ySpec` 处理 focus ring 与 ARIA 语义"},
+  "promptStep5": {"message": "5. **组件** - 按组件目录线索组装组件（尽量复用 tokens/layout/motion）"},
+  "promptKeyValues": {"message": "## 关键数据"},
+  "promptFilesIncluded": {"message": "## 文件列表"},
+  "promptFileSpec": {"message": "- `ai/spec.json`：规范数据（事实来源）"},
+  "promptFilePrompt": {"message": "- `ai/prompt.md`：本文件（提示词/步骤）"},
+  "promptFileSamples": {"message": "- `samples/elements.json`：元素样本（如有）"},
+  "promptFooter": {"message": "*请以 spec.json 为事实来源，所有设计决策以此为准。*"},
+
+  "optionsTitle": {"message": "UiToAi - 使用说明"},
+  "optionsSubtitle": {"message": "使用说明"},
+  "optionsTroubleshooting": {"message": "排障"}
+}
