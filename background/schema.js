@@ -61,8 +61,8 @@ export function createEmptySpec(target) {
     version: 1,
     target: target || { host: "", url: "", title: "", capturedAt: "" },
     designTokens: {
-      colors: { top: [], semanticHints: {}, sources: {} },
-      typography: { fontFamiliesTop: [], scale: {}, letterSpacingHints: [] },
+      colors: { top: [], semanticHints: {}, sources: { cssVariables: { computedTop: [], declaredTop: [], sources: { scannedRulesCount: 0, blockedCount: 0 } } } },
+      typography: { fontFamiliesTop: [], scale: { fontSizeTop: [], lineHeightTop: [] }, letterSpacingHints: [] },
       spacing: { distribution: [], scaleHints: [] },
       radius: { distribution: [], scaleHints: [] },
       shadow: { distribution: [], scaleHints: [] },
@@ -79,18 +79,27 @@ export function createEmptySpec(target) {
     },
     motionSpec: {
       transitions: { durationTop: [], easingTop: [] },
-      animations: { namesTop: [], durationTop: [] },
-      keyframes: { namesTop: [], extractedCount: 0, blockedCount: 0 },
-      reducedMotionHints: {}
+      animations: { namesTop: [], durationTop: [], easingTop: [] },
+      keyframes: { namesTop: [], extractedCount: 0, blockedCount: 0, samples: [] },
+      reducedMotionHints: { mediaRulesCount: 0 }
     },
     a11ySpec: {
       focusRingRules: [],
+      focusRingRulesSources: { scannedRulesCount: 0, blockedCount: 0 },
       ariaUsageStats: { roleTop: [], ariaAttrTop: [] },
       headingOutlineStats: { h1: 0, h2: 0, h3: 0, h4: 0, h5: 0, h6: 0 }
     },
     engineeringFingerprint: {
       frameworkHints: { nextjs: false, react: false, vue: false, svelte: false, angular: false, unknown: true },
-      cssArchitectureHints: { cssVariablesUsageScore: 0, utilityClassDensityScore: 0, styleTagCount: 0 }
+      cssArchitectureHints: {
+        cssVariablesUsageScore: 0,
+        utilityClassDensityScore: 0,
+        styleTagCount: 0,
+        styleSheetsCount: 0,
+        styleSheetsBlockedCount: 0,
+        settings: createDefaultRunSettings()
+      },
+      extra: { generator: "", scriptSrcHintsTop: [], globals: {} }
     }
   };
 }

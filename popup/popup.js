@@ -262,7 +262,7 @@ async function captureSnapshot() {
   setStatus(t("statusCapturing") || "Capturing...");
 
   try {
-    const res = await sendToTab(MSG.CAPTURE_SNAPSHOT);
+    const res = await sendToTab(MSG.CAPTURE_SNAPSHOT, { settings: currentRun.settings || null });
     if (!res?.ok) {
       setStatus(res?.error || t("errCaptureFailed") || "Capture failed", "error");
       return;

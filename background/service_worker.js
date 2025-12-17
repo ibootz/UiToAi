@@ -203,22 +203,15 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         // 获取或创建 project
         let project = await getProjectByHost(host);
         if (!project) {
-          project = await createProject({ host, notes: "Auto-created" });
+          project = await createProject(host, "Auto-created");
         }
 
         // 获取当前运行中的 run，如果没有则创建一个
         const runs = await listRunsByProject(project.id);
-        let currentRun = runs.find(run => !run.stoppedAt);
+        let currentRun = runs.find((run) => !run.endedAt);
 
         if (!currentRun) {
-          currentRun = await startRun({
-            projectId: project.id,
-            settings: {
-              sanitizeHtml: false,
-              maxSamples: 50,
-              maxStringLength: 1000
-            }
-          });
+          currentRun = await startRun(project.id, tab.url, tab.title || "", null);
         }
 
         // 添加样本到当前 run

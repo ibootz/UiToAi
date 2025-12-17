@@ -131,6 +131,10 @@ export async function startRun(projectId, url, title, settings) {
   const db = await openDb();
   const now = new Date().toISOString();
   const host = new URL(url).host;
+  const mergedSettings = {
+    ...createDefaultRunSettings(),
+    ...(settings || {})
+  };
   const run = {
     id: crypto.randomUUID(),
     projectId: projectId,
@@ -138,7 +142,7 @@ export async function startRun(projectId, url, title, settings) {
     endedAt: null,
     url: url,
     title: title,
-    settings: settings || createDefaultRunSettings(),
+    settings: mergedSettings,
     spec: createEmptySpec({ host, url, title, capturedAt: now }),
     samples: createEmptySamples()
   };

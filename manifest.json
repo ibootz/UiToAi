@@ -21,7 +21,19 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["content/content_script.js"],
+      "js": [
+        "content/constants.js",
+        "content/ui.js",
+        "content/tailwind.js",
+        "content/export_sanitize.js",
+        "content/capture.js",
+        "content/picker.js",
+        "content/spec_utils.js",
+        "content/spec_extractors_tokens.js",
+        "content/spec_extractors_motion_a11y.js",
+        "content/spec_capture.js",
+        "content/message_router.js"
+      ],
       "run_at": "document_idle"
     }
   ]

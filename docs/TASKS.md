@@ -91,7 +91,7 @@
 ---
 
 ## Milestone 2（采集质量提升）
-### T2.1 DesignTokens：CSS Variables + computed 聚合统计
+### T2.1 DesignTokens：CSS Variables + computed 聚合统计 ✅ 已完成
 - 文件：`content/content_script.js`
 - 工作项：
   - CSS variables：可访问 stylesheet 的 `:root` / `html` / `body` 变量摘要 + computed variables topN
@@ -99,7 +99,7 @@
   - 输出：topN 值 + scaleHints（例如 4/8pt 网格概率）
 - DoD：在 2-3 个站点导出结果能看到“稳定的 topN 字体/颜色/圆角/阴影/间距”
 
-### T2.2 LayoutRules：断点/容器/栅格线索
+### T2.2 LayoutRules：断点/容器/栅格线索 ✅ 已完成
 - 文件：`content/content_script.js`
 - 工作项：
   - @media 解析：抽取 min/max-width 候选断点集合（同源可取；跨域统计 blockedCount）
@@ -107,21 +107,21 @@
   - gridHints：grid-template-columns、gap 分布
 - DoD：能输出 breakpoints candidates；container maxWidth topN
 
-### T2.3 MotionSpec：transition/animation tokens + keyframes 引用
+### T2.3 MotionSpec：transition/animation tokens + keyframes 引用 ✅ 已完成
 - 文件：`content/content_script.js`
 - 工作项：
   - computed 采样：transition-duration/timing-function、animation-duration 等 topN
   - stylesheet 扫描：@keyframes 名称集合；可访问则抽取部分文本摘要（长度上限）
 - DoD：导出中能看到 duration/easing 的分布；keyframes namesTop
 
-### T2.4 A11ySpec：focus ring 与语义结构统计
+### T2.4 A11ySpec：focus ring 与语义结构统计 ✅ 已完成
 - 文件：`content/content_script.js`
 - 工作项：
   - CSS 规则扫描：:focus / :focus-visible 相关规则 selector + declarationsSummary
   - DOM 统计：role/aria-* 属性 topN；heading (h1-h6) 统计
 - DoD：spec 中 focusRingRules 与 ariaUsageStats 非空（多数站点）
 
-### T2.5 EngineeringFingerprint：框架与 CSS 架构线索
+### T2.5 EngineeringFingerprint：框架与 CSS 架构线索 ✅ 已完成
 - 文件：`content/content_script.js`
 - 工作项：
   - generator meta、脚本特征、全局变量线索
