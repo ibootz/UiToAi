@@ -21,6 +21,14 @@ function captureSnapshot(settings) {
   const focus = extractFocusRingRules(s);
   spec.a11ySpec.focusRingRules = focus.list;
   spec.a11ySpec.focusRingRulesSources = focus.sources;
+  spec.a11ySpec.focusRingRulesStats =
+    focus.stats ||
+    {
+      matchedRulesCount: 0,
+      listCount: Array.isArray(focus.list) ? focus.list.length : 0,
+      pseudoOccurrences: { focus: 0, focusVisible: 0, focusWithin: 0 },
+      selectorOccurrencesTotal: 0
+    };
 
   return spec;
 }

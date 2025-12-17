@@ -100,11 +100,46 @@ function summarizeFocusRuleDeclarations(style, truncateLength) {
   return truncateString(parts.join("; "), truncateLength);
 }
 
+function classifyFocusSelector(selectorText) {
+  const out = {
+    pseudos: [],
+    occurrences: 0,
+    occurrencesByPseudo: { focus: 0, focusVisible: 0, focusWithin: 0 }
+  };
+
+  const sel = String(selectorText || "");
+  if (!sel) return out;
+
+  const re = /:(focus-visible|focus-within|focus)\b/g;
+  const pseudoSet = new Set();
+  let m;
+  while ((m = re.exec(sel))) {
+    out.occurrences++;
+    const p = m[1];
+    if (p === "focus") out.occurrencesByPseudo.focus++;
+    else if (p === "focus-visible") out.occurrencesByPseudo.focusVisible++;
+    else if (p === "focus-within") out.occurrencesByPseudo.focusWithin++;
+    pseudoSet.add(p);
+  }
+
+  const pseudos = Array.from(pseudoSet);
+  pseudos.sort((a, b) => {
+    const order = { "focus-visible": 0, "focus-within": 1, focus: 2 };
+    return (order[a] ?? 99) - (order[b] ?? 99);
+  });
+  out.pseudos = pseudos;
+
+  return out;
+}
+
 function extractFocusRingRules(settings) {
   const s = normalizeRunSettings(settings);
   const rulesOut = [];
   let blockedCount = 0;
   let scannedRulesCount = 0;
+  let matchedRulesCount = 0;
+  const pseudoOccurrences = { focus: 0, focusVisible: 0, focusWithin: 0 };
+  let selectorOccurrencesTotal = 0;
 
   for (const sheet of document.styleSheets) {
     const rules = safeGetCssRules(sheet);
@@ -119,22 +154,59 @@ function extractFocusRingRules(settings) {
       if (rule.type !== CSSRule.STYLE_RULE) return;
       const selector = String(rule.selectorText || "");
       if (!selector) return;
-      if (!selector.includes(":focus")) return;
+      const cls = classifyFocusSelector(selector);
+      if (cls.occurrences <= 0) return;
       const summary = summarizeFocusRuleDeclarations(rule.style, Math.min(600, s.truncateLength));
       if (!summary) return;
-      rulesOut.push({ selector: truncateString(selector, 200), declarationsSummary: summary });
+
+      matchedRulesCount++;
+      pseudoOccurrences.focus += cls.occurrencesByPseudo.focus;
+      pseudoOccurrences.focusVisible += cls.occurrencesByPseudo.focusVisible;
+      pseudoOccurrences.focusWithin += cls.occurrencesByPseudo.focusWithin;
+      selectorOccurrencesTotal += cls.occurrences;
+
+      rulesOut.push({
+        selector: truncateString(selector, 200),
+        pseudos: cls.pseudos,
+        occurrences: cls.occurrences,
+        declarationsSummary: summary
+      });
     });
   }
 
-  const seen = new Set();
-  const deduped = [];
+  const map = new Map();
   for (const r of rulesOut) {
     const key = r.selector;
-    if (seen.has(key)) continue;
-    seen.add(key);
+    const prev = map.get(key);
+    if (!prev) {
+      map.set(key, { ...r });
+      continue;
+    }
+
+    const pseudos = new Set([...(prev.pseudos || []), ...(r.pseudos || [])]);
+    const merged = Array.from(pseudos);
+    merged.sort((a, b) => {
+      const order = { "focus-visible": 0, "focus-within": 1, focus: 2 };
+      return (order[a] ?? 99) - (order[b] ?? 99);
+    });
+    prev.pseudos = merged;
+    prev.occurrences = Number(prev.occurrences || 0) + Number(r.occurrences || 0);
+  }
+
+  const deduped = [];
+  for (const r of map.values()) {
     deduped.push(r);
     if (deduped.length >= 60) break;
   }
 
-  return { list: deduped, sources: { scannedRulesCount, blockedCount } };
+  return {
+    list: deduped,
+    sources: { scannedRulesCount, blockedCount },
+    stats: {
+      matchedRulesCount,
+      listCount: deduped.length,
+      pseudoOccurrences,
+      selectorOccurrencesTotal
+    }
+  };
 }

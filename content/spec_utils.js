@@ -28,6 +28,12 @@ function createEmptySpec(target) {
     a11ySpec: {
       focusRingRules: [],
       focusRingRulesSources: { scannedRulesCount: 0, blockedCount: 0 },
+      focusRingRulesStats: {
+        matchedRulesCount: 0,
+        listCount: 0,
+        pseudoOccurrences: { focus: 0, focusVisible: 0, focusWithin: 0 },
+        selectorOccurrencesTotal: 0
+      },
       ariaUsageStats: { roleTop: [], ariaAttrTop: [] },
       headingOutlineStats: { h1: 0, h2: 0, h3: 0, h4: 0, h5: 0, h6: 0 }
     },
