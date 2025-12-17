@@ -102,16 +102,17 @@ function generatePromptMd(spec, project) {
   return lines.join("\n");
 }
 
-async function downloadFile(folder, relativePath, content, mimeType, isFirst = false) {
+async function downloadFile(folder, relativePath, content, mimeType) {
   // MV3 Service Worker 环境中 URL.createObjectURL 可能不可用。
   // 对于文本类导出（JSON/Markdown），用 data: URL 更稳定。
   const url = `data:${mimeType};charset=utf-8,${encodeURIComponent(String(content ?? ""))}`;
 
   try {
+    // 所有文件都不弹出保存对话框，直接下载到默认下载目录
     await chrome.downloads.download({
       url,
       filename: `${folder}/${relativePath}`,
-      saveAs: isFirst // 只有第一个文件弹出保存对话框
+      saveAs: false // 统一不弹窗
     });
     return { ok: true, path: relativePath };
   } catch (err) {
@@ -128,43 +129,97 @@ export async function exportRunToFiles(run, project) {
   const folder = `UiToAi-export-${host}-${stamp}`;
 
   const results = [];
+  const startTime = Date.now();
 
-  // 1. ai/spec.json（第一个文件，saveAs=true 让用户选择下载位置）
-  results.push(await downloadFile(
-    folder,
-    "ai/spec.json",
-    JSON.stringify(spec, null, 2),
-    "application/json",
-    true
-  ));
+  // 并行下载所有文件，提高效率
+  const downloadPromises = [
+    // 1. ai/spec.json
+    downloadFile(
+      folder,
+      "ai/spec.json",
+      JSON.stringify(spec, null, 2),
+      "application/json"
+    ),
+    // 2. ai/prompt.md
+    downloadFile(
+      folder,
+      "ai/prompt.md",
+      generatePromptMd(spec, project),
+      "text/markdown"
+    ),
+    // 3. samples/elements.json
+    downloadFile(
+      folder,
+      "samples/elements.json",
+      JSON.stringify(samples, null, 2),
+      "application/json"
+    )
+  ];
 
-  // 短暂延迟，避免浏览器阻止批量下载
-  await new Promise((r) => setTimeout(r, 300));
+  // 等待所有下载完成
+  const downloadResults = await Promise.allSettled(downloadPromises);
 
-  // 2. ai/prompt.md
-  results.push(await downloadFile(
-    folder,
-    "ai/prompt.md",
-    generatePromptMd(spec, project),
-    "text/markdown",
-    false
-  ));
-
-  await new Promise((r) => setTimeout(r, 200));
-
-  // 3. samples/elements.json
-  results.push(await downloadFile(
-    folder,
-    "samples/elements.json",
-    JSON.stringify(samples, null, 2),
-    "application/json",
-    false
-  ));
+  // 处理结果
+  downloadResults.forEach((result, index) => {
+    if (result.status === 'fulfilled') {
+      results.push(result.value);
+    } else {
+      const fileName = ['ai/spec.json', 'ai/prompt.md', 'samples/elements.json'][index];
+      results.push({
+        ok: false,
+        path: fileName,
+        error: String(result.reason?.message || result.reason)
+      });
+    }
+  });
 
   const failed = results.filter((r) => !r.ok);
+  const duration = Date.now() - startTime;
+
+  // 获取默认下载目录路径
+  const downloadPath = await getDefaultDownloadPath();
+
   if (failed.length > 0) {
-    return { ok: false, error: "some_files_failed", results };
+    return {
+      ok: false,
+      error: "some_files_failed",
+      results,
+      folder,
+      downloadPath,
+      duration
+    };
   }
 
-  return { ok: true, folder, filesCount: results.length, results };
+  return {
+    ok: true,
+    folder,
+    filesCount: results.length,
+    results,
+    downloadPath,
+    duration
+  };
+}
+
+// 获取默认下载目录路径
+async function getDefaultDownloadPath() {
+  try {
+    // 尝试获取默认下载目录
+    const downloadItems = await chrome.downloads.search({
+      limit: 1,
+      orderBy: ['-startTime']
+    });
+
+    if (downloadItems.length > 0 && downloadItems[0].filename) {
+      const fullPath = downloadItems[0].filename;
+      // 提取目录路径（去掉文件名）
+      const pathParts = fullPath.split(/[/\\]/);
+      pathParts.pop(); // 移除文件名
+      return pathParts.join('/') || 'Downloads';
+    }
+  } catch (err) {
+    console.warn('[UiToAi] 无法获取下载路径:', err);
+  }
+
+  // 返回默认路径
+  return navigator.platform.includes('Win') ? 'Downloads' : 'Downloads';
 }

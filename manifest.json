@@ -8,7 +8,7 @@
     "default_popup": "popup/popup.html",
     "default_title": "__MSG_actionTitle__"
   },
-  "permissions": ["activeTab", "storage", "downloads", "tabs"],
+  "permissions": ["activeTab", "storage", "downloads", "tabs", "notifications"],
   "host_permissions": ["<all_urls>"],
   "options_ui": {
     "page": "options/options.html",

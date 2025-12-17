@@ -20,6 +20,11 @@ import {
 } from "./db.js";
 
 import { exportRunToFiles } from "./exporter.js";
+import { showExportSuccess, showExportError, setupNotificationHandlers } from "./notifications.js";
+
+// ---------------------- 初始化 ----------------------
+// 设置通知处理器
+setupNotificationHandlers();
 
 // ---------------------- 消息处理 ----------------------
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -158,6 +163,16 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       }
       const project = await getProject(run.projectId);
       const result = await exportRunToFiles(run, project);
+
+      // 显示导出结果通知
+      if (result.ok) {
+        await showExportSuccess(result);
+        console.log(`[UiToAi SW] 导出成功: ${result.folder} (${result.filesCount} 个文件, ${result.duration}ms)`);
+      } else {
+        await showExportError(result);
+        console.error(`[UiToAi SW] 导出失败: ${result.error}`);
+      }
+
       sendResponse(result);
       return;
     }
