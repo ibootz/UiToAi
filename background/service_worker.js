@@ -22,6 +22,91 @@ import {
 import { exportRunToFiles } from "./exporter.js";
 import { showExportSuccess, showExportError, setupNotificationHandlers } from "./notifications.js";
 
+function truncateString(s, maxLen) {
+  const str = String(s ?? "");
+  if (!maxLen || str.length <= maxLen) return str;
+  return str.slice(0, Math.max(0, maxLen - 3)) + "...";
+}
+
+function stripTextFromHtml(html, maxLen) {
+  const src = truncateString(html, maxLen);
+  try {
+    return src.replace(/>([^<]{1,2000})</g, "><");
+  } catch {
+    return src;
+  }
+}
+
+function deepTruncate(value, maxLen, budget) {
+  const b = budget && typeof budget === "object" ? budget : { remaining: 8000 };
+  if (b.remaining <= 0) return null;
+  b.remaining--;
+
+  if (value === null || value === undefined) return value;
+  const t = typeof value;
+  if (t === "string" || t === "number" || t === "boolean") {
+    return t === "string" ? truncateString(value, maxLen) : value;
+  }
+
+  if (Array.isArray(value)) {
+    const out = [];
+    for (let i = 0; i < value.length; i++) {
+      if (b.remaining <= 0) break;
+      out.push(deepTruncate(value[i], maxLen, b));
+    }
+    return out;
+  }
+
+  if (t === "object") {
+    const out = {};
+    const entries = Object.entries(value);
+    for (let i = 0; i < entries.length; i++) {
+      if (b.remaining <= 0) break;
+      const [k, v] = entries[i];
+      out[k] = deepTruncate(v, maxLen, b);
+    }
+    return out;
+  }
+
+  return null;
+}
+
+function sanitizeAndTruncateSample(sample, settings) {
+  const s = settings && typeof settings === "object" ? settings : {};
+  const truncateLength = Number.isFinite(s.truncateLength) ? s.truncateLength : 2000;
+  const sanitize = Boolean(s.sanitize);
+
+  const cloned = deepTruncate(sample, truncateLength, { remaining: 12000 }) || {};
+
+  if (sanitize) {
+    if (cloned?.selection && typeof cloned.selection === "object") {
+      cloned.selection.textPreview = "";
+    }
+
+    if (cloned?.snippets && typeof cloned.snippets === "object") {
+      if (typeof cloned.snippets.outerHTML === "string") {
+        cloned.snippets.outerHTML = stripTextFromHtml(cloned.snippets.outerHTML, Math.min(12000, truncateLength));
+      }
+      if (typeof cloned.snippets.tailwindGuessOuterHTML === "string") {
+        cloned.snippets.tailwindGuessOuterHTML = stripTextFromHtml(cloned.snippets.tailwindGuessOuterHTML, Math.min(12000, truncateLength));
+      }
+
+      const bundle = cloned.snippets.bundle;
+      if (bundle && typeof bundle === "object" && Array.isArray(bundle.files)) {
+        for (const f of bundle.files) {
+          if (!f || typeof f !== "object") continue;
+          const mime = String(f.mime || "").toLowerCase();
+          if (mime.includes("text/html") && typeof f.content === "string") {
+            f.content = stripTextFromHtml(f.content, Math.min(12000, truncateLength));
+          }
+        }
+      }
+    }
+  }
+
+  return cloned;
+}
+
 // ---------------------- 初始化 ----------------------
 // 设置通知处理器
 setupNotificationHandlers();
@@ -223,10 +308,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           snippets: message.payload?.snippets || {}
         };
 
-        await addRunSample(currentRun.id, sample);
+        const safeSample = sanitizeAndTruncateSample(sample, currentRun.settings);
+
+        await addRunSample(currentRun.id, safeSample);
 
         console.log('[UiToAi SW] CAPTURE_ADD 处理成功');
-        sendResponse({ ok: true, sampleId: sample.id });
+        sendResponse({ ok: true, sampleId: safeSample.id });
 
       } catch (err) {
         console.error('[UiToAi SW] CAPTURE_ADD 处理失败:', err);

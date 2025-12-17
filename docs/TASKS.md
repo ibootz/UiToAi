@@ -131,14 +131,18 @@
 ---
 
 ## Milestone 3（组件状态线索与样本完善）
-### T3.1 ComponentCatalog：组件识别与样本采集
+### T3.1 ComponentCatalog：组件识别与样本采集 ✅ 已完成
 - 文件：`content/content_script.js`
 - 工作项：
   - 组件分类：button/link/input/select/textarea/modal/nav/list/table 等
   - 样本：每类组件保留少量样本（selector、bbox、outerHTML(可脱敏)、computed 摘要）
 - DoD：导出 elements.json 能按组件类型分组，且样本数量受控
 
-### T3.2 CSS State Rules：:hover/:focus/:active/:disabled 规则线索
+> 完成内容：
+> - Snapshot 采集中新增 componentCatalog 自动采样与分组（按 type + perTypeLimit/totalLimit 控制）
+> - `samples/elements.json` 导出结构增强：同时包含 componentCatalog 分组样本与 picked elements
+
+### T3.2 CSS State Rules：:hover/:focus/:active/:disabled 规则线索 ✅ 已完成
 - 文件：`content/content_script.js`
 - 工作项：
   - stylesheet 扫描包含 pseudo 的 selector
@@ -146,20 +150,31 @@
   - occurrences 统计（出现次数/命中候选）
 - DoD：stateRules 在组件丰富的网站可明显增多，且体积可控
 
-### T3.3 Export Prompt：将 spec 自动编译成可用 prompt.md
+> 完成内容：
+> - Snapshot 阶段新增 stateRules 扫描与去重合并（记录 pseudos/occurrences/declarationsSummary + stats/sources）
+
+### T3.3 Export Prompt：将 spec 自动编译成可用 prompt.md ✅ 已完成
 - 文件：`background/service_worker.js`
 - 工作项：
   - prompt 模板：生成顺序、约束、验收点
   - 自动填充：breakpoints、typography scale、colors、motion tokens、focus ring
 - DoD：复制 prompt 直接用于 Cursor/Windsurf 能产出“更贴近原站”的 UI
 
-### T3.4 体积控制与去噪策略
+> 完成内容：
+> - prompt.md 增强为“目标/步骤/约束/验收点 + 关键值摘要”，覆盖 tokens/layout/motion/a11y/stateRules/componentCatalog
+
+### T3.4 体积控制与去噪策略 ✅ 已完成
 - 文件：`content/content_script.js`、`background/service_worker.js`、`popup/popup.js`
 - 工作项：
   - 采样上限（元素数量、规则数量、字符串长度）
   - topN（颜色/字体/阴影/间距/断点/keyframes）
   - 去噪开关：过滤透明色/默认字体/无意义阴影
 - DoD：导出目录在常见站点保持在可接受大小（建议 < 2-5MB）
+
+> 完成内容：
+> - Popup 增加采集设置：denoise/maxElements/maxRules/truncateLength
+> - Tokens 提取增加 denoise 过滤：默认字体/无意义阴影/默认黑白色/zIndex=0
+> - Legacy Pick Element 入库增加深度字符串截断与（可选）脱敏，避免单样本撑爆导出体积
 
 ---
 

@@ -18,6 +18,20 @@ function captureSnapshot(settings) {
   spec.engineeringFingerprint.cssArchitectureHints = extractCssArchitectureHints(s);
   spec.engineeringFingerprint.extra = extractEngineeringFingerprintExtra();
   spec.motionSpec = extractMotionSpec(s);
+
+  try {
+    const catalog = extractComponentCatalog(s);
+    spec.componentCatalog.components = catalog.components || [];
+    spec.componentCatalog.componentsSources = catalog.sources || spec.componentCatalog.componentsSources;
+  } catch {}
+
+  try {
+    const state = extractStateRules(s);
+    spec.componentCatalog.stateRules = state.list || [];
+    spec.componentCatalog.stateRulesSources = state.sources || spec.componentCatalog.stateRulesSources;
+    spec.componentCatalog.stateRulesStats = state.stats || spec.componentCatalog.stateRulesStats;
+  } catch {}
+
   const focus = extractFocusRingRules(s);
   spec.a11ySpec.focusRingRules = focus.list;
   spec.a11ySpec.focusRingRulesSources = focus.sources;

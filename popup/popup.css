@@ -125,6 +125,41 @@ body {
   height: 14px;
 }
 
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.field-label {
+  font-size: 10px;
+  color: rgba(15, 23, 42, 0.55);
+}
+
+.field-input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 8px;
+  padding: 6px 8px;
+  font-size: 12px;
+  background: #ffffff;
+  color: #0f172a;
+}
+
+.field-input:focus {
+  outline: none;
+  border-color: rgba(99, 102, 241, 0.7);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.12);
+}
+
 .preview {
   border: 1px solid rgba(15, 23, 42, 0.12);
   border-radius: 8px;

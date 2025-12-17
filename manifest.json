@@ -31,6 +31,7 @@
         "content/spec_utils.js",
         "content/spec_extractors_tokens.js",
         "content/spec_extractors_motion_a11y.js",
+        "content/spec_extractors_components.js",
         "content/spec_capture.js",
         "content/message_router.js"
       ],

@@ -101,6 +101,35 @@ function setStatus(text, type = "") {
   el.className = "status" + (type ? ` ${type}` : "");
 }
 
+function readRunSettingsFromUi() {
+  const sanitize = Boolean($("opt-sanitize")?.checked);
+  const denoise = $("opt-denoise") ? Boolean($("opt-denoise").checked) : true;
+
+  const maxElementsRaw = $("opt-max-elements") ? Number($("opt-max-elements").value) : NaN;
+  const maxRulesRaw = $("opt-max-rules") ? Number($("opt-max-rules").value) : NaN;
+  const truncateRaw = $("opt-truncate") ? Number($("opt-truncate").value) : NaN;
+
+  const settings = {
+    sanitize,
+    denoise
+  };
+
+  if (Number.isFinite(maxElementsRaw)) settings.maxElements = maxElementsRaw;
+  if (Number.isFinite(maxRulesRaw)) settings.maxRules = maxRulesRaw;
+  if (Number.isFinite(truncateRaw)) settings.truncateLength = truncateRaw;
+
+  return settings;
+}
+
+function applyRunSettingsToUi(settings) {
+  if (!settings || typeof settings !== "object") return;
+  if ($("opt-sanitize")) $("opt-sanitize").checked = Boolean(settings.sanitize);
+  if ($("opt-denoise")) $("opt-denoise").checked = settings.denoise === undefined ? true : Boolean(settings.denoise);
+  if ($("opt-max-elements") && Number.isFinite(settings.maxElements)) $("opt-max-elements").value = String(settings.maxElements);
+  if ($("opt-max-rules") && Number.isFinite(settings.maxRules)) $("opt-max-rules").value = String(settings.maxRules);
+  if ($("opt-truncate") && Number.isFinite(settings.truncateLength)) $("opt-truncate").value = String(settings.truncateLength);
+}
+
 // ---------------------- UI 更新函数 ----------------------
 function updateProjectInfo() {
   const el = $("project-info");
@@ -152,6 +181,7 @@ function updateRunStatus() {
 function updatePreview() {
   const el = $("preview");
   if (currentRun?.spec) {
+    const cc = currentRun.spec.componentCatalog || {};
     const summary = {
       target: currentRun.spec.target,
       designTokens: {
@@ -164,6 +194,11 @@ function updatePreview() {
       motionSpec: {
         transitionsCount: currentRun.spec.motionSpec?.transitions?.durationTop?.length || 0,
         keyframesCount: currentRun.spec.motionSpec?.keyframes?.namesTop?.length || 0
+      },
+      componentCatalog: {
+        componentTypesCount: Array.isArray(cc.components) ? cc.components.length : 0,
+        componentSamplesTotal: cc.componentsSources?.totalSamples || 0,
+        stateRulesCount: Array.isArray(cc.stateRules) ? cc.stateRules.length : 0
       },
       a11ySpec: currentRun.spec.a11ySpec?.headingOutlineStats || {},
       engineeringFingerprint: currentRun.spec.engineeringFingerprint || {},
@@ -211,6 +246,10 @@ async function initProject() {
 
   updateRunStatus();
   updatePreview();
+
+  if (currentRun?.settings) {
+    applyRunSettingsToUi(currentRun.settings);
+  }
 }
 
 async function startRun() {
@@ -220,12 +259,13 @@ async function startRun() {
   }
 
   const tab = await getActiveTab();
+  const settings = readRunSettingsFromUi();
   const res = await chrome.runtime.sendMessage({
     type: MSG.RUN_START,
     projectId: currentProject.id,
     url: tab?.url || "",
     title: tab?.title || "",
-    settings: { sanitize: $("opt-sanitize").checked }
+    settings
   });
 
   if (!res?.ok) {

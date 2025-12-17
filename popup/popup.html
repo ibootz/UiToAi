@@ -43,6 +43,24 @@
           <input type="checkbox" id="opt-sanitize" />
           <span data-i18n="optSanitize">Sanitize (remove text content)</span>
         </label>
+        <label>
+          <input type="checkbox" id="opt-denoise" checked />
+          <span>De-noise (filter defaults)</span>
+        </label>
+        <div class="options-grid">
+          <label class="field">
+            <span class="field-label">Max elements</span>
+            <input id="opt-max-elements" class="field-input" type="number" min="1" max="500" value="50" />
+          </label>
+          <label class="field">
+            <span class="field-label">Max rules</span>
+            <input id="opt-max-rules" class="field-input" type="number" min="50" max="5000" value="200" />
+          </label>
+          <label class="field">
+            <span class="field-label">Truncate</span>
+            <input id="opt-truncate" class="field-input" type="number" min="200" max="20000" value="2000" />
+          </label>
+        </div>
       </div>
     </section>
 

@@ -50,6 +50,7 @@ Samples {
 export function createDefaultRunSettings() {
   return {
     sanitize: false,
+    denoise: true,
     maxElements: 50,
     maxRules: 200,
     truncateLength: 2000
@@ -75,7 +76,15 @@ export function createEmptySpec(target) {
     },
     componentCatalog: {
       components: [],
-      stateRules: []
+      componentsSources: { sampledElementsCount: 0, totalSamples: 0, perTypeLimit: 0, totalLimit: 0 },
+      stateRules: [],
+      stateRulesSources: { scannedRulesCount: 0, blockedCount: 0 },
+      stateRulesStats: {
+        matchedRulesCount: 0,
+        listCount: 0,
+        pseudoOccurrences: { hover: 0, active: 0, focus: 0, focusVisible: 0, disabled: 0 },
+        selectorOccurrencesTotal: 0
+      }
     },
     motionSpec: {
       transitions: { durationTop: [], easingTop: [] },

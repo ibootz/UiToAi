@@ -171,6 +171,53 @@ function extractCssArchitectureHints(settings) {
   return { cssVariablesUsageScore, utilityClassDensityScore, styleTagCount, styleSheetsCount, styleSheetsBlockedCount, settings: s };
 }
 
+function isDefaultFontFamilyName(name) {
+  const s = String(name || "").trim().toLowerCase();
+  if (!s) return true;
+  const defaults = new Set([
+    "system-ui",
+    "ui-sans-serif",
+    "ui-serif",
+    "ui-monospace",
+    "-apple-system",
+    "blinkmacsystemfont",
+    "segoe ui",
+    "roboto",
+    "helvetica",
+    "helvetica neue",
+    "arial",
+    "sans-serif",
+    "serif",
+    "monospace"
+  ]);
+  return defaults.has(s);
+}
+
+function isNoisyDefaultColor(v) {
+  const s = String(v || "").trim().toLowerCase().replace(/\s+/g, "");
+  if (!s) return true;
+  const noisy = new Set([
+    "rgb(0,0,0)",
+    "rgba(0,0,0,1)",
+    "#000",
+    "#000000",
+    "rgb(255,255,255)",
+    "rgba(255,255,255,1)",
+    "#fff",
+    "#ffffff"
+  ]);
+  return noisy.has(s);
+}
+
+function isMeaninglessShadow(v) {
+  const s = String(v || "").trim().toLowerCase().replace(/\s+/g, " ");
+  if (!s) return true;
+  if (s === "none") return true;
+  if (/(^| )0px 0px 0px( 0px)?( |$)/.test(s) && /(rgba\(0, ?0, ?0, ?0\)|rgba\(0,0,0,0\))/.test(s)) return true;
+  if (/(^| )0 0 0( 0)?( |$)/.test(s) && /(rgba\(0, ?0, ?0, ?0\)|rgba\(0,0,0,0\))/.test(s)) return true;
+  return false;
+}
+
 function extractDesignTokensSample(settings) {
   const s = normalizeRunSettings(settings);
   const colors = [];
@@ -189,10 +236,14 @@ function extractDesignTokensSample(settings) {
   for (const el of sampleEls) {
     try {
       const cs = getComputedStyle(el);
-      if (cs.color && !isTransparentColor(cs.color)) colors.push(cs.color);
-      if (cs.backgroundColor && !isTransparentColor(cs.backgroundColor)) colors.push(cs.backgroundColor);
-      if (cs.borderTopColor && !isTransparentColor(cs.borderTopColor)) colors.push(cs.borderTopColor);
-      if (cs.fontFamily) fontFamilies.push(cs.fontFamily.split(",")[0].trim().replace(/['"]/g, ""));
+      if (cs.color && !isTransparentColor(cs.color) && (!s.denoise || !isNoisyDefaultColor(cs.color))) colors.push(cs.color);
+      if (cs.backgroundColor && !isTransparentColor(cs.backgroundColor) && (!s.denoise || !isNoisyDefaultColor(cs.backgroundColor))) colors.push(cs.backgroundColor);
+      if (cs.borderTopColor && !isTransparentColor(cs.borderTopColor) && (!s.denoise || !isNoisyDefaultColor(cs.borderTopColor))) colors.push(cs.borderTopColor);
+
+      if (cs.fontFamily) {
+        const primary = cs.fontFamily.split(",")[0].trim().replace(/['"]/g, "");
+        if (!s.denoise || !isDefaultFontFamilyName(primary)) fontFamilies.push(primary);
+      }
       if (cs.fontSize) fontSizes.push(cs.fontSize);
       if (cs.lineHeight && cs.lineHeight !== "normal") lineHeights.push(cs.lineHeight);
       if (cs.letterSpacing && cs.letterSpacing !== "normal") letterSpacings.push(cs.letterSpacing);
@@ -211,8 +262,8 @@ function extractDesignTokensSample(settings) {
         const px = parsePx(r);
         if (px !== null) radiiPx.push(px);
       }
-      if (cs.boxShadow && cs.boxShadow !== "none") shadows.push(cs.boxShadow);
-      if (cs.zIndex && cs.zIndex !== "auto") zIndices.push(cs.zIndex);
+      if (cs.boxShadow && cs.boxShadow !== "none" && (!s.denoise || !isMeaninglessShadow(cs.boxShadow))) shadows.push(cs.boxShadow);
+      if (cs.zIndex && cs.zIndex !== "auto" && (!s.denoise || cs.zIndex !== "0")) zIndices.push(cs.zIndex);
     } catch {}
   }
 

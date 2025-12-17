@@ -17,7 +17,15 @@ function createEmptySpec(target) {
     },
     componentCatalog: {
       components: [],
-      stateRules: []
+      componentsSources: { sampledElementsCount: 0, totalSamples: 0, perTypeLimit: 0, totalLimit: 0 },
+      stateRules: [],
+      stateRulesSources: { scannedRulesCount: 0, blockedCount: 0 },
+      stateRulesStats: {
+        matchedRulesCount: 0,
+        listCount: 0,
+        pseudoOccurrences: { hover: 0, active: 0, focus: 0, focusVisible: 0, disabled: 0 },
+        selectorOccurrencesTotal: 0
+      }
     },
     motionSpec: {
       transitions: { durationTop: [], easingTop: [] },
@@ -59,6 +67,7 @@ function normalizeRunSettings(settings) {
   const truncateLength = Number.isFinite(s.truncateLength) ? s.truncateLength : 2000;
   return {
     sanitize: Boolean(s.sanitize),
+    denoise: s.denoise === undefined ? true : Boolean(s.denoise),
     maxElements: Math.max(1, Math.min(500, maxElements)),
     maxRules: Math.max(50, Math.min(5000, maxRules)),
     truncateLength: Math.max(200, Math.min(20000, truncateLength))
