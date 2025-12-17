@@ -75,7 +75,54 @@
   "promptFileSamples": {"message": "- `samples/elements.json` - Captured element samples"},
   "promptFooter": {"message": "*Use spec.json as the source of truth for all design decisions.*"},
 
-  "optionsTitle": {"message": "UiToAi - Usage"},
+  "optionsTitle": {"message": "UiToAi - Usage Guide"},
   "optionsSubtitle": {"message": "Usage Guide"},
-  "optionsTroubleshooting": {"message": "Troubleshooting"}
+  "optionsTroubleshooting": {"message": "Troubleshooting"},
+
+  "featureTitle": {"message": "What UiToAi Can Do"},
+  "featureIntro": {"message": "UiToAi is a powerful Chrome extension that extracts UI design specifications from any website, helping AI coding tools replicate designs more accurately."},
+
+  "featureSnapshotTitle": {"message": "📊 Capture Snapshot (Design System Analysis)"},
+  "featureSnapshotDesc": {"message": "Extract comprehensive design specifications from the entire page"},
+  "featureSnapshotItems": {
+    "message": "• **Design Tokens**: Colors, typography, spacing, border-radius, shadows, z-index\n• **Layout Rules**: Responsive breakpoints, container widths, grid systems\n• **Motion Specs**: Transition animations, keyframes, duration and easing functions\n• **Accessibility**: Heading structure, ARIA usage statistics\n• **Engineering Fingerprint**: Framework detection (React/Vue/Angular), CSS architecture patterns"
+  },
+  "featureSnapshotUse": {"message": "Best for: Design system analysis, style guide creation, comprehensive design documentation"},
+
+  "featureElementTitle": {"message": "🎯 Pick Element (Component-Level Analysis)"},
+  "featureElementDesc": {"message": "Select specific UI components for detailed code extraction"},
+  "featureElementItems": {
+    "message": "• **HTML Structure**: Complete component HTML code\n• **Computed Styles**: Actual CSS property values\n• **Tailwind Conversion**: Intelligent generation of corresponding Tailwind classes\n• **Element Dimensions**: Position, size and geometric information\n• **Text Preview**: Element's text content"
+  },
+  "featureElementUse": {"message": "Best for: Component implementation, code reference, specific UI element replication"},
+
+  "featurePageTitle": {"message": "📄 Pick Page (Full Page Capture)"},
+  "featurePageDesc": {"message": "Capture complete page structure and base information"},
+  "featurePageItems": {
+    "message": "• **Complete HTML**: Full page source code\n• **Page Information**: URL, title and metadata\n• **Google Fonts**: Font links and imports\n• **Page Overview**: Comprehensive page-level data"
+  },
+  "featurePageUse": {"message": "Best for: Page migration, complete reconstruction, full-page reference"},
+
+  "workflowTitle": {"message": "🚀 Recommended Workflows"},
+  "workflowDesign": {"message": "For Design System Analysis"},
+  "workflowDesignSteps": {"message": "Start Run → Capture Snapshot → Export for AI → Get complete design specifications"},
+  "workflowComponent": {"message": "For Component Implementation"},
+  "workflowComponentSteps": {"message": "Start Run → Pick Element → Select key components → Export for AI → Get component code"},
+  "workflowPage": {"message": "For Page Reconstruction"},
+  "workflowPageSteps": {"message": "Start Run → Pick Element → Pick page → Export for AI → Get complete page code"},
+
+  "dataTitle": {"message": "📁 Export Structure"},
+  "dataDescription": {"message": "All data is exported to an AI-friendly folder structure in your Downloads folder"},
+  "dataFiles": {
+    "message": "• **ai/spec.json**: Complete design specification data (source of truth)\n• **ai/prompt.md**: AI-optimized prompt with design guidelines\n• **samples/elements.json**: Captured element samples and code snippets"
+  },
+
+  "privacyTitle": {"message": "🔒 Privacy & Security"},
+  "privacyLocal": {"message": "• **100% Local Processing**: All data is processed locally, no cloud uploads\n• **No Data Collection**: We don't collect or store any of your data\n• **Optional Sanitization**: Remove sensitive text content before export\n• **Sample Control**: Limit the amount of data collected"},
+
+  "tipsTitle": {"message": "💡 Pro Tips"},
+  "tips1": {"message": "• **Best Practice**: Start with Capture Snapshot for design context, then use Pick Element for specific components"},
+  "tips2": {"message": "• **Multiple Pages**: Capture different pages to build comprehensive design systems"},
+  "tips3": {"message": "• **Quality**: Wait for pages to fully load before capturing for best results"},
+  "tips4": {"message": "• **AI Ready**: Exported data is optimized for Cursor, Windsurf, and other AI coding tools"}
 }

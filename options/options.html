@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>UiToAi - Usage / 使用说明</title>
+    <title id="page-title">UiToAi - Usage Guide</title>
     <link rel="stylesheet" href="options.css" />
   </head>
   <body>
@@ -13,77 +13,149 @@
     </header>
 
     <main class="container">
-      <section id="section-en" class="card">
-        <h2>Quick Start</h2>
-        <ol>
-          <li>Open any webpage you want to replicate (e.g. a marketing site or web app).</li>
-          <li>Click the UiToAi extension icon to open the popup.</li>
-          <li>Click <b>Start Run</b> to begin a collection session.</li>
-          <li>Click <b>Capture Snapshot</b> to extract design tokens, layout rules, motion and a11y hints.</li>
-          <li>Optional: click <b>Pick Element</b> to enter element selection mode.</li>
-          <li>Click <b>Export for AI</b> to export files into a folder:
-            <code>UiToAi-export-{host}-{timestamp}/</code>
-            <ul>
-              <li><code>ai/spec.json</code> - source of truth data</li>
-              <li><code>ai/prompt.md</code> - prompt guidance for AI coding tools</li>
-              <li><code>samples/elements.json</code> - element samples (if any)</li>
-            </ul>
-          </li>
-          <li>Click <b>Stop Run</b> to finish the session.</li>
-        </ol>
+      <!-- Introduction -->
+      <section class="card feature-intro">
+        <h2 id="feature-title">What UiToAi Can Do</h2>
+        <p id="feature-intro">UiToAi is a powerful Chrome extension that extracts UI design specifications from any website, helping AI coding tools replicate designs more accurately.</p>
       </section>
 
-      <section id="section-zh" class="card">
-        <h2>快速开始</h2>
-        <ol>
-          <li>打开你要复刻的网页（营销页 / Web 应用 / 文档页等）。</li>
-          <li>点击 UiToAi 扩展图标打开弹窗。</li>
-          <li>点击 <b>Start Run</b> 开始本次采集。</li>
-          <li>点击 <b>Capture Snapshot</b> 提取设计 tokens、布局规则、动效与可访问性线索。</li>
-          <li>可选：点击 <b>Pick Element</b> 进入元素选择模式。</li>
-          <li>点击 <b>Export for AI</b> 导出到文件夹：
-            <code>UiToAi-export-{host}-{timestamp}/</code>
-            <ul>
-              <li><code>ai/spec.json</code>：规范数据（事实来源）</li>
-              <li><code>ai/prompt.md</code>：给 AI 工具的提示词模板</li>
-              <li><code>samples/elements.json</code>：元素样本（如果有）</li>
-            </ul>
-          </li>
-          <li>点击 <b>Stop Run</b> 结束采集。</li>
-        </ol>
+      <!-- Core Features -->
+      <section class="card">
+        <h2 id="feature-snapshot-title">📊 Capture Snapshot (Design System Analysis)</h2>
+        <p id="feature-snapshot-desc">Extract comprehensive design specifications from the entire page</p>
+        <pre id="feature-snapshot-items">• **Design Tokens**: Colors, typography, spacing, border-radius, shadows, z-index
+• **Layout Rules**: Responsive breakpoints, container widths, grid systems
+• **Motion Specs**: Transition animations, keyframes, duration and easing functions
+• **Accessibility**: Heading structure, ARIA usage statistics
+• **Engineering Fingerprint**: Framework detection (React/Vue/Angular), CSS architecture patterns</pre>
+        <p><strong id="feature-snapshot-use">Best for: Design system analysis, style guide creation, comprehensive design documentation</strong></p>
       </section>
 
       <section class="card">
-        <h2 id="options-troubleshooting">Troubleshooting</h2>
-        <ul id="troubleshooting-en">
-          <li>
-            <b>Popup buttons disabled</b>:
-            Make sure the current tab is a normal web page (not <code>edge://</code>, <code>chrome://</code>, extension pages).
-          </li>
-          <li>
-            <b>Export blocked</b>:
-            Your browser may block multiple downloads. Allow downloads for this extension and retry.
-          </li>
-          <li>
-            <b>How to view logs</b>:
-            Go to <code>edge://extensions</code> / <code>chrome://extensions</code> → extension Details → Service worker → Inspect.
-          </li>
-        </ul>
+        <h2 id="feature-element-title">🎯 Pick Element (Component-Level Analysis)</h2>
+        <p id="feature-element-desc">Select specific UI components for detailed code extraction</p>
+        <pre id="feature-element-items">• **HTML Structure**: Complete component HTML code
+• **Computed Styles**: Actual CSS property values
+• **Tailwind Conversion**: Intelligent generation of corresponding Tailwind classes
+• **Element Dimensions**: Position, size and geometric information
+• **Text Preview**: Element's text content</pre>
+        <p><strong id="feature-element-use">Best for: Component implementation, code reference, specific UI element replication</strong></p>
+      </section>
 
-        <ul id="troubleshooting-zh">
-          <li>
-            <b>弹窗按钮不可用</b>：
-            请确认当前标签页是普通网页（不是 <code>edge://</code>、<code>chrome://</code>、扩展页等）。
-          </li>
-          <li>
-            <b>导出被拦截</b>：
-            浏览器可能会阻止批量下载。请允许此扩展下载多个文件后重试。
-          </li>
-          <li>
-            <b>如何查看日志</b>：
-            打开 <code>edge://extensions</code> / <code>chrome://extensions</code> → 详细信息 → Service worker → Inspect。
-          </li>
+      <section class="card">
+        <h2 id="feature-page-title">📄 Pick Page (Full Page Capture)</h2>
+        <p id="feature-page-desc">Capture complete page structure and base information</p>
+        <pre id="feature-page-items">• **Complete HTML**: Full page source code
+• **Page Information**: URL, title and metadata
+• **Google Fonts**: Font links and imports
+• **Page Overview**: Comprehensive page-level data</pre>
+        <p><strong id="feature-page-use">Best for: Page migration, complete reconstruction, full-page reference</strong></p>
+      </section>
+
+      <!-- Quick Start -->
+      <section class="card">
+        <h2>Quick Start / 快速开始</h2>
+        <div class="two-column">
+          <div class="column">
+            <h3>English</h3>
+            <ol>
+              <li>Open any webpage you want to replicate</li>
+              <li>Click the UiToAi extension icon</li>
+              <li>Click <b>Start Run</b> to begin collection</li>
+              <li>Use <b>Capture Snapshot</b> for design specs OR <b>Pick Element</b> for components</li>
+              <li>Click <b>Export for AI</b> to download files</li>
+              <li>Click <b>Stop Run</b> when finished</li>
+            </ol>
+          </div>
+          <div class="column">
+            <h3>中文</h3>
+            <ol>
+              <li>打开要复刻的网页</li>
+              <li>点击 UiToAi 扩展图标</li>
+              <li>点击 <b>开始运行</b> 开始采集</li>
+              <li>使用 <b>采集快照</b> 获取设计规范 或 <b>选择元素</b> 获取组件</li>
+              <li>点击 <b>导出给 AI</b> 下载文件</li>
+              <li>完成后点击 <b>停止运行</b></li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- Workflows -->
+      <section class="card">
+        <h2 id="workflow-title">🚀 Recommended Workflows</h2>
+        <div class="workflow-grid">
+          <div class="workflow-item">
+            <h4 id="workflow-design">For Design System Analysis</h4>
+            <p id="workflow-design-steps">Start Run → Capture Snapshot → Export for AI → Get complete design specifications</p>
+          </div>
+          <div class="workflow-item">
+            <h4 id="workflow-component">For Component Implementation</h4>
+            <p id="workflow-component-steps">Start Run → Pick Element → Select key components → Export for AI → Get component code</p>
+          </div>
+          <div class="workflow-item">
+            <h4 id="workflow-page">For Page Reconstruction</h4>
+            <p id="workflow-page-steps">Start Run → Pick Element → Pick page → Export for AI → Get complete page code</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Export Structure -->
+      <section class="card">
+        <h2 id="data-title">📁 Export Structure</h2>
+        <p id="data-description">All data is exported to an AI-friendly folder structure in your Downloads folder</p>
+        <pre id="data-files">UiToAi-export-{host}-{timestamp}/
+├── ai/
+│   ├── spec.json     # Complete design specification data (source of truth)
+│   ├── prompt.md     # AI-optimized prompt with design guidelines
+│   └── tokens.css    # CSS variables file (optional)
+└── samples/
+    └── elements.json # Captured element samples and code snippets</pre>
+      </section>
+
+      <!-- Privacy -->
+      <section class="card">
+        <h2 id="privacy-title">🔒 Privacy & Security</h2>
+        <pre id="privacy-local">• **100% Local Processing**: All data is processed locally, no cloud uploads
+• **No Data Collection**: We don't collect or store any of your data
+• **Optional Sanitization**: Remove sensitive text content before export
+• **Sample Control**: Limit the amount of data collected</pre>
+      </section>
+
+      <!-- Pro Tips -->
+      <section class="card">
+        <h2 id="tips-title">💡 Pro Tips</h2>
+        <ul id="tips-list">
+          <li id="tips1"><strong>Best Practice</strong>: Start with Capture Snapshot for design context, then use Pick Element for specific components</li>
+          <li id="tips2"><strong>Multiple Pages</strong>: Capture different pages to build comprehensive design systems</li>
+          <li id="tips3"><strong>Quality</strong>: Wait for pages to fully load before capturing for best results</li>
+          <li id="tips4"><strong>AI Ready</strong>: Exported data is optimized for Cursor, Windsurf, and other AI coding tools</li>
         </ul>
+      </section>
+
+      <!-- Troubleshooting -->
+      <section class="card">
+        <h2 id="options-troubleshooting">Troubleshooting / 排障</h2>
+        <div class="two-column">
+          <div class="column">
+            <h3>English</h3>
+            <ul>
+              <li><b>Popup buttons disabled</b>: Make sure the current tab is a normal web page (not chrome://, edge://, or extension pages)</li>
+              <li><b>Export blocked</b>: Your browser may block multiple downloads. Allow downloads for this extension and retry</li>
+              <li><b>How to view logs</b>: Go to chrome://extensions → extension Details → Service worker → Inspect</li>
+              <li><b>Element selection not working</b>: Try refreshing the page and restarting the extension</li>
+            </ul>
+          </div>
+          <div class="column">
+            <h3>中文</h3>
+            <ul>
+              <li><b>弹窗按钮不可用</b>：请确认当前标签页是普通网页（不是 chrome://、edge://、扩展页等）</li>
+              <li><b>导出被拦截</b>：浏览器可能会阻止批量下载。请允许此扩展下载多个文件后重试</li>
+              <li><b>如何查看日志</b>：打开 chrome://extensions → 详细信息 → Service worker → Inspect</li>
+              <li><b>元素选择不工作</b>：尝试刷新页面并重启扩展</li>
+            </ul>
+          </div>
+        </div>
       </section>
 
       <footer class="footer">
