@@ -269,9 +269,47 @@ function onClick(e) {
   e.stopPropagation();
 
   stopPicker();
-  captureElement(target).catch((err) => {
-    showToast(`Capture failed: ${String(err?.message || err)}`);
+
+  // 添加更详细的错误处理和调试信息
+  console.log('[UiToAi] 开始采集元素:', {
+    tagName: target.tagName,
+    className: target.className,
+    id: target.id
   });
+
+  try {
+    captureElement(target).then((result) => {
+      console.log('[UiToAi] 采集成功:', result);
+      showToast('Element captured successfully!');
+    }).catch((err) => {
+      console.error('[UiToAi] 采集失败:', err);
+      const errorMsg = `Capture failed: ${String(err?.message || err)}`;
+      showToast(errorMsg);
+
+      // 尝试发送错误信息到后台
+      try {
+        chrome.runtime.sendMessage({
+          type: 'ERROR_REPORT',
+          error: {
+            message: errorMsg,
+            stack: err?.stack,
+            element: {
+              tagName: target.tagName,
+              className: target.className,
+              id: target.id
+            }
+          }
+        }).catch(() => {
+          console.warn('[UiToAi] 无法发送错误报告到后台');
+        });
+      } catch (reportErr) {
+        console.warn('[UiToAi] 错误报告发送失败:', reportErr);
+      }
+    });
+  } catch (syncErr) {
+    console.error('[UiToAi] 同步错误:', syncErr);
+    showToast(`Sync error: ${String(syncErr?.message || syncErr)}`);
+  }
 }
 
 function safeTextPreview(el) {
@@ -705,11 +743,28 @@ function computeCssSelector(el) {
 }
 
 async function captureElement(el) {
-  const pageFonts = extractGoogleFontLinks();
-  const { clonedRoot, stats } = cloneWithTailwind(el);
-  const rootStyle = cssSnapshot(el);
-  const rootTw = buildTailwindClasses(rootStyle);
-  const clonedOuter = clonedRoot instanceof Element ? clonedRoot.outerHTML : el.outerHTML;
+  try {
+    console.log('[UiToAi] captureElement 开始执行');
+
+    // 验证输入参数
+    if (!el || !(el instanceof Element)) {
+      throw new Error('Invalid element provided');
+    }
+
+    console.log('[UiToAi] 提取 Google 字体链接...');
+    const pageFonts = extractGoogleFontLinks();
+
+    console.log('[UiToAi] 克隆元素并添加 Tailwind...');
+    const { clonedRoot, stats } = cloneWithTailwind(el);
+
+    console.log('[UiToAi] 生成 CSS 快照...');
+    const rootStyle = cssSnapshot(el);
+
+    console.log('[UiToAi] 构建 Tailwind 类名...');
+    const rootTw = buildTailwindClasses(rootStyle);
+
+    console.log('[UiToAi] 生成 HTML 内容...');
+    const clonedOuter = clonedRoot instanceof Element ? clonedRoot.outerHTML : el.outerHTML;
 
   const bundle = {
     schema: 1,
@@ -763,10 +818,25 @@ async function captureElement(el) {
     }
   };
 
+  console.log('[UiToAi] 发送消息到后台脚本...');
   const res = await chrome.runtime.sendMessage({ type: "SUI_CAPTURE_ADD", payload });
-  if (!res?.ok) throw new Error(res?.error || "store_failed");
 
+  if (!res?.ok) {
+    throw new Error(res?.error || "store_failed");
+  }
+
+  console.log('[UiToAi] 数据保存成功');
   showToast(t("toastSaved") || "Saved to UiToAi popup");
+
+  return {
+    success: true,
+    payload: payload
+  };
+
+  } catch (err) {
+    console.error('[UiToAi] captureElement 执行失败:', err);
+    throw err;
+  }
 }
 
 async function capturePage() {

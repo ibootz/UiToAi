@@ -162,6 +162,71 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       return;
     }
 
+    // === Error Reporting ===
+    if (type === MSG.ERROR_REPORT) {
+      console.error('[UiToAi SW] 收到错误报告:', message.error);
+      // 这里可以添加错误日志存储或发送到分析服务
+      sendResponse({ ok: true });
+      return;
+    }
+
+    // === Legacy compatibility: SUI_CAPTURE_ADD ===
+    if (type === MSG.CAPTURE_ADD) {
+      try {
+        console.log('[UiToAi SW] 收到 CAPTURE_ADD 消息:', message);
+
+        // 获取当前 active tab 来确定 project
+        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+        if (!tab || !tab.url) {
+          sendResponse({ ok: false, error: "no_active_tab" });
+          return;
+        }
+
+        const url = new URL(tab.url);
+        const host = url.host;
+
+        // 获取或创建 project
+        let project = await getProjectByHost(host);
+        if (!project) {
+          project = await createProject({ host, notes: "Auto-created" });
+        }
+
+        // 获取当前运行中的 run，如果没有则创建一个
+        const runs = await listRunsByProject(project.id);
+        let currentRun = runs.find(run => !run.stoppedAt);
+
+        if (!currentRun) {
+          currentRun = await startRun({
+            projectId: project.id,
+            settings: {
+              sanitizeHtml: false,
+              maxSamples: 50,
+              maxStringLength: 1000
+            }
+          });
+        }
+
+        // 添加样本到当前 run
+        const sample = {
+          id: message.payload?.id || crypto.randomUUID(),
+          capturedAt: new Date().toISOString(),
+          page: message.payload?.page || {},
+          selection: message.payload?.selection || {},
+          snippets: message.payload?.snippets || {}
+        };
+
+        await addRunSample(currentRun.id, sample);
+
+        console.log('[UiToAi SW] CAPTURE_ADD 处理成功');
+        sendResponse({ ok: true, sampleId: sample.id });
+
+      } catch (err) {
+        console.error('[UiToAi SW] CAPTURE_ADD 处理失败:', err);
+        sendResponse({ ok: false, error: err?.message || "capture_add_failed" });
+      }
+      return;
+    }
+
     // === 转发给 Content Script 的消息 ===
     if (type === MSG.UI_SHOW || type === MSG.PICK_ELEMENT || type === MSG.CAPTURE_SNAPSHOT) {
       // 这些消息由 popup 发起，需要转发到当前 tab 的 content script

@@ -23,5 +23,11 @@ export const MSG = {
   // Content Script side
   CAPTURE_SNAPSHOT: "SUI2_CAPTURE_SNAPSHOT",
   PICK_ELEMENT: "SUI2_PICK_ELEMENT",
-  UI_SHOW: "SUI2_UI_SHOW"
+  UI_SHOW: "SUI2_UI_SHOW",
+
+  // Legacy compatibility (for content script compatibility)
+  CAPTURE_ADD: "SUI_CAPTURE_ADD",
+
+  // Error reporting
+  ERROR_REPORT: "ERROR_REPORT"
 };
